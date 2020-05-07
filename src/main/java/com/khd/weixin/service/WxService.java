@@ -223,7 +223,7 @@ public class WxService {
                 return new TextMessage(requestMap, "你点了一点第一个一级菜单");
             case "32":
                 //处理点击了第三个一级菜单的第二个子菜单
-                break;
+                return new TextMessage(requestMap, "你点了一点第三个一级菜单的第二个子菜单");
             default:
                 break;
         }

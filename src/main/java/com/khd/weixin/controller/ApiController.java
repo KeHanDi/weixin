@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,6 +22,13 @@ import java.util.Map;
 @Controller
 public class ApiController {
 
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        System.out.println("test");
+        return "我们家婷宝最棒棒👍";
+    }
+
     /**
      * 接口配置信息提交 会访问这个接口
      * @param request
@@ -30,7 +36,7 @@ public class ApiController {
      * @throws IOException
      */
     @GetMapping
-    public void test(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         /**
          * signature	微信加密签名，signature结合了开发者填写的token参数和请求中的timestamp参数、nonce参数。
          * timestamp	时间戳
@@ -41,6 +47,7 @@ public class ApiController {
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
         String echostr = request.getParameter("echostr");
+        System.out.println("echostr: " + echostr);
         //校验证签名
         if(WxService.check(timestamp,nonce,signature)) {
             System.out.println("接入成功");
