@@ -1,8 +1,10 @@
 package com.khd.weixin.service;
 
+import com.baidu.aip.ocr.AipOcr;
 import com.khd.weixin.entity.*;
 import com.khd.weixin.util.Util;
 import com.thoughtworks.xstream.XStream;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -146,7 +148,7 @@ public class WxService {
                 msg = dealTextMessage(requestMap);
                 break;
             case "image":
-                // msg = dealImage(requestMap);
+                msg = dealImage(requestMap);
                 break;
             case "voice":
 
@@ -176,7 +178,35 @@ public class WxService {
         return null;
     }
 
+    /**
+     * 进行图片识别
+     *
+     * @param requestMap
+     * @return by 罗召勇 Q群193557337
+     */
+    private static BaseMessage dealImage(Map<String, String> requestMap) {
+        // 初始化一个AipOcr
+        AipOcr client = new AipOcr(APP_ID, API_KEY, SECRET_KEY);
+        // 可选：设置网络连接参数
+        client.setConnectionTimeoutInMillis(2000);
+        client.setSocketTimeoutInMillis(60000);
+        // 调用接口
+        String path = requestMap.get("PicUrl");
 
+        //进行网络图片的识别
+        org.json.JSONObject res = client.generalUrl(path, new HashMap<String, String>());
+        String json = res.toString();
+        //转为jsonObject
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        JSONArray jsonArray = jsonObject.getJSONArray("words_result");
+        Iterator<JSONObject> it = jsonArray.iterator();
+        StringBuilder sb = new StringBuilder();
+        while (it.hasNext()) {
+            JSONObject next = it.next();
+            sb.append(next.getString("words"));
+        }
+        return new TextMessage(requestMap, sb.toString());
+    }
 
     /**
      * 处理事件推送
@@ -317,7 +347,7 @@ public class WxService {
      * @param path 上传的文件的路径
      * @param type 上传的文件类型
      * @return by 罗召勇 Q群193557337
-     *//*
+     */
     public static String upload(String path, String type) {
         File file = new File(path);
         //地址
@@ -376,11 +406,11 @@ public class WxService {
         return null;
     }
 
-    *//**
+    /**
      * 获取带参数二维码的ticket
      *
      * @return by 罗召勇 Q群193557337
-     *//*
+     */
     public static String getQrCodeTicket() {
         String at = getAccessToken();
         String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + at;
@@ -391,16 +421,16 @@ public class WxService {
         return ticket;
     }
 
-    *//**
+    /**
      * 获取用户的基本信息
      *
      * @return by 罗召勇 Q群193557337
-     *//*
+     */
     public static String getUserInfo(String openid) {
         String url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
         url = url.replace("ACCESS_TOKEN", getAccessToken()).replace("OPENID", openid);
         String result = Util.get(url);
         return result;
-    }*/
+    }
 
 }
