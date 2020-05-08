@@ -21,11 +21,33 @@ class WeixinApplicationTests {
     public static final String API_KEY = "q3TlGWWqEBG9uGvlFIBtpvY5";
     public static final String SECRET_KEY = "A14W5VRNG8my1GXYYAyNND0RjzBwxI8A";
 
+    /**
+     * 获取用户信息--前提是该用户已经关注了这个公众号
+     */
+    @Test
+    public void testUserInfo() {
+        String userInfo = WxService.getUserInfo("o88RTw0_WJvLEPqPBl1me346smvY");
+        System.out.println(userInfo);
+    }
+
+    // 测试 通过生成临时二维码的ticket
     @Test
     public void testQrCode() {
         String qrCodeTicket = WxService.getQrCodeTicket();
         System.out.println(qrCodeTicket);
         // gQEk8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyTUF5Y1lBUDRkajMxQXVnUk51YzYAAgTGTbVeAwRYAgAA
+
+        /*
+         *说明：
+         * 通过ticket换取二维码
+         * 获取二维码ticket后，开发者可用ticket换取二维码图片。请注意，本接口无须登录态即可调用。
+         *
+         * 请求说明
+         * HTTP GET请求（请使用https协议）https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET 提醒：TICKET记得进行UrlEncode
+         *
+         * 返回说明
+         * ticket正确情况下，http 返回码是200，是一张图片，可以直接展示或者下载。
+         */
     }
 
     @Test

@@ -76,4 +76,10 @@ public class ApiController {
         out.flush();
         out.close();
     }
+
+    @GetMapping("getUserInfo")
+    public void getUserInfo() {
+
+
+    }
 }
